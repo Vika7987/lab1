@@ -1,15 +1,15 @@
 class Abiturient:
     """
-    Клас для опису інформації про абітурієнта.
+    Class to describe information about an applicant.
 
-    Атрибути:
-      id: Унікальний ідентифікатор абітурієнта.
-      прізвище: Прізвище абітурієнта.
-      ім'я: Ім'я абітурієнта.
-      по_батькові: По-батькові абітурієнта.
-      адреса: Адреса проживання абітурієнта.
-      телефон: Номер телефону абітурієнта.
-      оцінки: Список оцінок абітурієнта.
+    Attributes:
+      id: Unique identifier of the applicant.
+      прізвище: Surname of the applicant.
+      ім'я: Name of the applicant.
+      по_батькові: Patronymic of the applicant.
+      адреса: Address of the applicant.
+      телефон: Phone number of the applicant.
+      оцінки: List of the applicant's grades.
     """
     def __init__(self, id, прізвище, ім_я, по_батькові, адреса, телефон, оцінки):
         self.id = id
@@ -29,11 +29,11 @@ class Abiturient:
 
 class EducationalProgram:
     """
-    Клас для опису освітньої програми.
+    Class to describe an educational program.
 
-    Атрибути:
-      name: Назва освітньої програми.
-      limit: Ліміт кількості абітурієнтів, які можуть бути зараховані.
+    Attributes:
+      name: Name of the educational program.
+      limit: Limit of the number of applicants who can be enrolled.
     """
     def __init__(self, name, limit):
         self.name = name
@@ -54,14 +54,14 @@ class EducationalProgram:
 
 class AdmissionApplication:
     """
-    Клас для опису заявки на вступ.
+    Class to describe an admission application.
 
-    Атрибути:
-      абітурієнт: Абітурієнт, який подав заявку.
-      програма: Освітня програма, на яку подається заявка.
+    Attributes:
+      абітурієнт: Applicant who submitted the application.
+      програма: Educational program to which the application is submitted.
     """
     def __init__(self, абітурієнт, програма):
-        self.abiturіent = абітурієнт
+        self.abiturient = абітурієнт
         self.program = програма
 
     def __str__(self):
@@ -70,11 +70,11 @@ class AdmissionApplication:
 
 class University:
     """
-    Клас для опису університету.
+    Class to describe a university.
 
-    Атрибути:
-      name: Назва університету.
-      programs: Список освітніх програм університету.
+    Attributes:
+      name: Name of the university.
+      programs: List of educational programs of the university.
     """
     def __init__(self, name):
         self.name = name
@@ -90,41 +90,41 @@ class University:
         return admission_orders
 
 
-# Приклад використання
+# Example usage
 
 if name == "__main__":
-    # Створити університет
-    university = University("Національний Університет")
+    # Create a university
+    university = University("National University")
 
-    # Додати освітні програми
-    program1 = EducationalProgram("Комп'ютерні науки", 3)
-    program2 = EducationalProgram("Інженерія", 2)
+    # Add educational programs
+    program1 = EducationalProgram("Computer Science", 3)
+    program2 = EducationalProgram("Engineering", 2)
     university.add_program(program1)
     university.add_program(program2)
 
-    # Створити абітурієнтів
-    abiturient1 = Abiturient(1, "Сидоренко", "Сидір", "Петрович", "вул. Героїв Дніпра, 25", "+380997654321", [3, 3, 4, 5, 4])
-    abiturient2 = Abiturient(2, "Киселева", "Марія", "Олександрівна", "вул. Франка, 10", "+380957654321", [4, 5, 4, 5, 4])
-    abiturient3 = Abiturient(3, "Мартинова", "Ольга", "Сергіївна", "вул. Леніна, 30", "+380931234567", [5, 5, 5, 5, 5])
-    abiturient4 = Abiturient(4, "Волошенюк", "Ігор", "Миколайович", "вул. Козацька, 20", "+380991234567", [4, 4, 4, 4, 4])
+    # Create applicants
+    abiturient1 = Abiturient(1, "Сидоренко", "Сидір", "Петрович", "vul. Heroiv Dnipra, 25", "+380997654321", [3, 3, 4, 5, 4])
+    abiturient2 = Abiturient(2, "Киселева", "Марія", "Олександрівна", "vul. Franka, 10", "+380957654321", [4, 5, 4, 5, 4])
+    abiturient3 = Abiturient(3, "Мартинова", "Ольга", "Сергіївна", "vul. Lenina, 30", "+380931234567", [5, 5, 5, 5, 5])
+    abiturient4 = Abiturient(4, "Волошенюк", "Ігор", "Миколайович", "vul. Kozatska, 20", "+380991234567", [4, 4, 4, 4, 4])
 
-    # Подати заявки на освітні програми
+    # Submit applications to educational programs
     application1 = AdmissionApplication(abiturient1, program1)
     application2 = AdmissionApplication(abiturient2, program1)
     application3 = AdmissionApplication(abiturient3, program1)
     application4 = AdmissionApplication(abiturient4, program2)
 
-    # Додати заявки в освітні програми
+    # Add applications to educational programs
     program1.add_application(application1)
     program1.add_application(application2)
     program1.add_application(application3)
     program2.add_application(application4)
 
-    # Обробити заявки та сформувати накази на зарахування
-    admission_orders = university.process_admissions() 
-    # Вивести накази на зарахування
-    print("Накази на зарахування:")
+    # Process applications and generate admission orders
+    admission_orders = university.process_admissions()
+    # Print admission orders
+    print("Admission Orders:")
     for program_name, applications in admission_orders.items():
-        print(f"\nОсвітня програма: {program_name}")
+        print(f"\nEducational Program: {program_name}")
         for application in applications:
             print(application)
