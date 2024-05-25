@@ -1,39 +1,39 @@
-class Abiturient:
+class Applicant:
     """
-    Клас для опису інформації про абітурієнта.
+    Class to describe information about an applicant.
 
-    Атрибути:
-      id: Унікальний ідентифікатор абітурієнта.
-      прізвище: Прізвище абітурієнта.
-      ім'я: Ім'я абітурієнта.
-      по_батькові: По-батькові абітурієнта.
-      адреса: Адреса проживання абітурієнта.
-      телефон: Номер телефону абітурієнта.
-      оцінки: Список оцінок абітурієнта.
+    Attributes:
+      id: Unique identifier of the applicant.
+      surname: Surname of the applicant.
+      name: Name of the applicant.
+      patronymic: Patronymic of the applicant.
+      address: Address of the applicant.
+      phone: Phone number of the applicant.
+      grades: List of the applicant's grades.
     """
-    def __init__(self, id, прізвище, ім_я, по_батькові, адреса, телефон, оцінки):
+    def __init__(self, id, surname, name, patronymic, address, phone, grades):
         self.id = id
-        self.прізвище = прізвище
-        self.ім_я = ім_я
-        self.по_батькові = по_батькові
-        self.адреса = адреса
-        self.телефон = телефон
-        self.оцінки = оцінки
+        self.surname = surname
+        self.name = name
+        self.patronymic = patronymic
+        self.address = address
+        self.phone = phone
+        self.grades = grades
 
     def __str__(self):
-        return f"{self.прізвище} {self.ім_я} {self.по_батькові}"
+        return f"{self.surname} {self.name} {self.patronymic}"
 
     def get_sum_of_scores(self):
-        return sum(self.оцінки)
+        return sum(self.grades)
 
 
 class EducationalProgram:
     """
-    Клас для опису освітньої програми.
+    Class to describe an educational program.
 
-    Атрибути:
-      name: Назва освітньої програми.
-      limit: Ліміт кількості абітурієнтів, які можуть бути зараховані.
+    Attributes:
+      name: Name of the educational program.
+      limit: Limit of the number of applicants who can be enrolled.
     """
     def __init__(self, name, limit):
         self.name = name
@@ -44,24 +44,24 @@ class EducationalProgram:
         self.applications.append(application)
 
     def process_applications(self):
-        self.applications.sort(key=lambda app: app.abiturient.get_sum_of_scores(), reverse=True)
+        self.applications.sort(key=lambda app: app.applicant.get_sum_of_scores(), reverse=True)
         return self.applications[:self.limit]
 
 
 class AdmissionApplication:
     """
-    Клас для опису заявки на вступ.
+    Class to describe an admission application.
 
-    Атрибути:
-      абітурієнт: Абітурієнт, який подав заявку.
-      програма: Освітня програма, на яку подається заявка.
+    Attributes:
+      applicant: Applicant who submitted the application.
+      program: Educational program to which the application is submitted.
     """
-    def __init__(self, абітурієнт, програма):
-        self.abiturіent = абітурієнт
-        self.program = програма
+    def __init__(self, applicant, program):
+        self.applicant = applicant
+        self.program = program
 
     def __str__(self):
-        return f"{self.abiturіent} - {self.program.name}"
+        return f"{self.applicant} - {self.program.name}"
 
 
 class DuplicateAdmissionException(Exception):
@@ -70,11 +70,11 @@ class DuplicateAdmissionException(Exception):
 
 class University:
     """
-    Клас для опису університету.
+    Class to describe a university.
 
-    Атрибути:
-      name: Назва університету.
-      programs: Список освітніх програм університету.
+    Attributes:
+      name: Name of the university.
+      programs: List of educational programs of the university.
     """
     def __init__(self, name):
         self.name = name
@@ -85,61 +85,60 @@ class University:
 
     def process_admissions(self):
         admission_orders = {}
-        accepted_abiturients = set()
+        accepted_applicants = set()
 
         for program in self.programs:
             try:
                 processed_applications = program.process_applications()
                 for application in processed_applications:
-                    if application.abiturіent.id in accepted_abiturients:
-                        raise DuplicateAdmissionException(f"Абітурієнт {application.abiturіent} вже зарахований на іншу програму.")
-                    accepted_abiturients.add(application.abiturіent.id)
+                    if application.applicant.id in accepted_applicants:
+                        raise DuplicateAdmissionException(f"Applicant {application.applicant} is already admitted to another program.")
+                    accepted_applicants.add(application.applicant.id)
                 admission_orders[program.name] = processed_applications
             except DuplicateAdmissionException as e:
-                print(f"Помилка: {e}")
-                # Формуємо новий варіант списку на зарахування
-                program.applications = [app for app in program.applications if app.abiturіent.id not in accepted_abiturients]
+                print(f"Error: {e}")
+                # Create a new list of applications excluding already accepted applicants
+                program.applications = [app for app in program.applications if app.applicant.id not in accepted_applicants]
                 admission_orders[program.name] = program.process_applications()
 
         return admission_orders
 
 
-# Приклад використання
+# Example usage
 
 if name == "__main__":
-    # Створити університет
-    university = University("Національний Університет")
+    # Create a university
+    university = University("National University")
 
-    # Додати освітні програми
-    program1 = EducationalProgram("Комп'ютерні науки", 3)
-    program2 = EducationalProgram("Інженерія", 2)
+    # Add educational programs
+    program1 = EducationalProgram("Computer Science", 3)
+    program2 = EducationalProgram("Engineering", 2)
     university.add_program(program1)
     university.add_program(program2)
-    # Створити абітурієнтів
-    abiturient1 = Abiturient(1, "Сидоренко", "Сидір", "Петрович", "вул. Героїв Дніпра, 25", "+380997654321", [3, 3, 4, 5, 4])
-    abiturient2 = Abiturient(2, "Киселева", "Марія", "Олександрівна", "вул. Франка, 10", "+380957654321", [4, 5, 4, 5, 4])
-    abiturient3 = Abiturient(3, "Мартинова", "Ольга", "Сергіївна", "вул. Леніна, 30", "+380931234567", [5, 5, 5, 5, 5])
-    abiturient4 = Abiturient(4, "Волошенюк", "Ігор", "Миколайович", "вул. Козацька, 20", "+380991234567", [4, 4, 4, 4, 4])
+    # Create applicants
+    applicant1 = Applicant(1, "Sydorenko", "Sydir", "Petrovych", "Heroiv Dnipra St, 25", "+380997654321", [3, 3, 4, 5, 4])
+    applicant2 = Applicant(2, "Kiseleva", "Maria", "Oleksandrivna", "Franka St, 10", "+380957654321", [4, 5, 4, 5, 4])
+    applicant3 = Applicant(3, "Martynova", "Olga", "Serhiivna", "Lenina St, 30", "+380931234567", [5, 5, 5, 5, 5])
+    applicant4 = Applicant(4, "Voloshenyuk", "Ihor", "Mykolaiovych", "Kozatska St, 20", "+380991234567", [4, 4, 4, 4, 4])
 
-    # Подати заявки на освітні програми
-    application1 = AdmissionApplication(abiturient1, program1)
-    application2 = AdmissionApplication(abiturient2, program1)
-    application3 = AdmissionApplication(abiturient3, program1)
-    application4 = AdmissionApplication(abiturient4, program2)
+    # Submit applications to educational programs
+    application1 = AdmissionApplication(applicant1, program1)
+    application2 = AdmissionApplication(applicant2, program1)
+    application3 = AdmissionApplication(applicant3, program1)
+    application4 = AdmissionApplication(applicant4, program2)
 
-    # Додати заявки в освітні програми
+    # Add applications to educational programs
     program1.add_application(application1)
     program1.add_application(application2)
     program1.add_application(application3)
     program2.add_application(application4)
 
-    # Обробити заявки та сформувати накази на зарахування
+    # Process applications and generate admission orders
     admission_orders = university.process_admissions()
 
-    # Вивести накази на зарахування
-    print("Накази на зарахування:")
+    # Print admission orders
+    print("Admission Orders:")
     for program_name, applications in admission_orders.items():
-        print(f"\nОсвітня програма: {program_name}")
+        print(f"\nEducational Program: {program_name}")
         for application in applications:
             print(application)
-            
